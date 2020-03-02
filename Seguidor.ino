@@ -27,6 +27,11 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  //Adquirindo a posição da linha sob o robô
+  unsigned int position = qtr.readLineWhite(sensorValues); // Notar que sensorValues é um array de 8 elementos indicativo de cada sensor infravermelho
+  int correcao = ajuste(position);
+  
+  ultimoErro = objetivoLinha - position;
+
 
 }
