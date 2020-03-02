@@ -1,8 +1,13 @@
+#include "Grove_Motor_Driver_TB6612FNG.h"
+#include <Wire.h>
 #include <QTRSensors.h> 
 
 // Criando o objeto para o sensor QTR-8RC
 // Não há mais uma distinção de classes entre os sensores QTR-xA e QTR-xRC
 QTRSensors qtr;
+
+//Criando o objetivo para operação dos motores
+MotorDriver md;
 
 const uint8_t SensorCount = 8; // Número de sensores
 uint16_t sensorValues[SensorCount]; //Array que armazenará as leituras de cada um dos oito sensores
