@@ -30,8 +30,12 @@ void loop() {
   //Adquirindo a posição da linha sob o robô
   unsigned int position = qtr.readLineWhite(sensorValues); // Notar que sensorValues é um array de 8 elementos indicativo de cada sensor infravermelho
   int correcao = ajuste(position);
-  
+
+  //Computando o último erro
   ultimoErro = objetivoLinha - position;
 
+  //Aplicando o ajuste de velocidade aos motores
+  md.dcMotorRun(MOTOR_CHA, constrain(VelocidadeMaxima - correcao, 0, VelocidadeMaxima));
+  md.dcMotorRun(MOTOR_CHB, constrain(VelocidadeMaxima + correcao, 0, VelocidadeMaxima));
 
 }
