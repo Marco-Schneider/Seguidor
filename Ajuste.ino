@@ -1,6 +1,6 @@
 //Calculando o ajuste do motor
 
-int ajuste (unsigned int position, double ultimoErro)
+int ajuste (unsigned int position)
 {
   int erro  = objetivoLinha - position;
   
