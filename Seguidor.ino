@@ -38,4 +38,11 @@ void loop() {
   md.dcMotorRun(MOTOR_CHA, constrain(VelocidadeMaxima - correcao, 0, VelocidadeMaxima));
   md.dcMotorRun(MOTOR_CHB, constrain(VelocidadeMaxima + correcao, 0, VelocidadeMaxima));
 
+  if(sensorValues[2]>=500 && sensorValues[5]>=500) //Encuzilhada
+  {
+    //Avançar
+    md.dcMotorRun(MOTOR_CHA, VelocidadeMaxima);
+    md.dcMotorRun(MOTOR_CHB, VelocidadeMaxima);
+  }
+
 }
