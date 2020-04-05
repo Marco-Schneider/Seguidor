@@ -4,7 +4,7 @@ void calibrar()
 {
   // Configurando o sensor para a calibração
   qtr.setTypeRC(); // Visto que o sensor é o QTR-8RC
-  qtr.setSensorPins((const uint8_t[]){A05, A1, A2, A3, A4, A5, A6, A7}, SensorCount); // void QTRSensors::setSensorPins(const uint8_t *pins,uint8_t sensorCount)
+  qtr.setSensorPins((const uint8_t[]){A0, A1, A2, A3, A4, A5, A6, A7}, SensorCount); // void QTRSensors::setSensorPins(const uint8_t *pins,uint8_t sensorCount)
   qtr.setTimeout(1000);
 
   delay(500);
