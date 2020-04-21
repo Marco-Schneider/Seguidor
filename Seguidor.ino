@@ -19,11 +19,14 @@ const double KD = 0.00;
 double ultimoErro = 0;
 const int objetivoLinha = 3500; // Robô seguir centrado
 
+#define sensorCurva 11
+#define sensorFim 12
 #define VelocidadeMaxima 255
 
 void setup() {
   calibrar();
-
+  pinMode(sensorCurva, INPUT);
+  pinMode(sensorFim, INPUT);
 }
 
 void loop() {
