@@ -19,14 +19,20 @@ const double KD = 0.00;
 double ultimoErro = 0;
 const int objetivoLinha = 3500; // Robô seguir centrado
 
+//Variável de indicação de início/término de circuito
+bool hasFinished = false;
+
+//Variável de indicação de curvas
+bool isSensorOnCurve = false;
+
 #define sensorCurva 11
 #define sensorFim 12
 #define VelocidadeMaxima 255
 
 void setup() {
   calibrar();
-  pinMode(sensorCurva, INPUT);
-  pinMode(sensorFim, INPUT);
+  pinMode(sensorCurva, INPUT); //Sensor indicativo de curva
+  pinMode(sensorFim, INPUT);  //Sensor indicativo de início término de circuito
 }
 
 void loop() {
