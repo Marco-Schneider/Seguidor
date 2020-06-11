@@ -4,12 +4,12 @@
 void verifica_chegada()//A gente já chegou? Função aplicada ao fim do laço loop que parará o seguidor caso encontre o indicativo de término de percurso
 {
   chegada = digitalRead(sensorFim);
-  if (chegada == 1 && hasFinished == false) //Primeira faixa indica o início
-    hasFinished = true;
-  else if (chegada == 1 && hasFinished == true) //Faixa indicando o fim do percurso
+  if (chegada == 1 && hasFinished == true) //Primeira faixa indica o início
     hasFinished = false;
+  else if (chegada == 1 && hasFinished == false) //Faixa indicando o fim do percurso
+    hasFinished = true;
 
-  if (hasFinished == false) //Parar
+  if (hasFinished == true) //Parar
   {
     delay(500);
     md.dcMotorRun(MOTOR_CHA, 0);

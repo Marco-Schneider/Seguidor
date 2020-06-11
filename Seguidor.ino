@@ -21,7 +21,7 @@ const int objetivoLinha = 3500; // Robô seguir centrado
 
 //Variável de indicação de início/término de circuito
 int chegada;
-bool hasFinished = false;
+bool hasFinished = true;
 
 //Variável de indicação de curvas
 int curva;
