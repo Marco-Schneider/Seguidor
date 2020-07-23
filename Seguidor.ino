@@ -2,6 +2,7 @@
 #include <Wire.h>
 #include <QTRSensors.h> 
 
+//Teste 2
 // Criando o objeto para o sensor QTR-8RC
 // Não há mais uma distinção de classes entre os sensores QTR-xA e QTR-xRC
 QTRSensors qtr;
