@@ -17,6 +17,8 @@ uint16_t sensorValues[SensorCount]; //Array que armazenará as leituras de cada 
 // Valores iniciais escolhidos a esmo
 const double KP = 0.03;
 const double KD = 0.00;
+const double KI = 0.00;
+double integral = 0;
 double ultimoErro = 0;
 const int objetivoLinha = 3500; // Robô seguir centrado
 
