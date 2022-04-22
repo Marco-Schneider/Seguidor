@@ -1,12 +1,12 @@
 //Calculando o ajuste do motor
 
-int ajuste (unsigned int position)
+double ajuste (unsigned int position)
 {
   int erro  = objetivoLinha - position;
 
   integral = integral + erro;
   
-  int ajuste = KP*erro + KD*(ultimoErro - erro) + KI*integral;
+  double  ajuste = 1*(KP*erro + KD*(ultimoErro - erro) + KI*integral);
 
-  return ajuste;
+  return  ajuste;
 }
