@@ -6,7 +6,7 @@ double ajuste (unsigned int position)
 
   integral = integral + erro;
   
-  double  ajuste = 1*(KP*erro + KD*(ultimoErro - erro) + KI*integral);
+  double  ajuste = KP*erro + KD*(ultimoErro - erro) + KI*integral;
 
   return  ajuste;
 }

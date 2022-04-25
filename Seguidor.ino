@@ -1,7 +1,5 @@
-#include <SoftwareSerial.h>
 #include <SparkFun_TB6612.h>
-#include <Wire.h>
-#include <QTRSensors.h> 
+#include <QTRSensors.h>
 
 //Teste 2
 // Criando o objeto para o sensor QTR-8RC
@@ -14,33 +12,11 @@ QTRSensors qtr;
 const uint8_t SensorCount = 8; // Número de sensores
 uint16_t sensorValues[SensorCount]; //Array que armazenará as leituras de cada um dos oito sensores
 
-// Variáveis para o PID
-// Valores iniciais escolhidos a esmo
-const float KP = 0.50;
-const float KD = 0.002;
-const float KI = 0.00;
-float integral = 0;
-float ultimoErro = 0;
-float objetivoLinha = 3500; // Robô seguir centrado
-int tempoAntes;
-float soma = 0;
-float somaAntes = 0;
-float somatorio = 0;
-int n = 0; //Quantidade de iterações do sensor
 
-//Variável de indicação de início/término de circuito
-int chegada;
-bool hasFinished = true;
 
-//Variável de indicação de curvas
-int curva;
-bool isSensorOnCurve = false;
 
-//Sensores de borda
-#define sensorCurva 2
-#define sensorFim 10
-
-#define VelocidadeMaxima 35
+//---------DEFINICAO DOS MOTORES---------//
+#define velocidadeMaxima 120
 
 //Ponte H
 #define AIN1 5
@@ -60,6 +36,33 @@ Motor motor1 = Motor(AIN1, AIN2, PWMA, offsetA, STBY);
 
 //Motor direito
 Motor motor2 = Motor(BIN1, BIN2, PWMB, offsetB, STBY);
+//-------------------------------------//
+
+//---------VARIAVEIS AUXILIARES--------//
+
+//PID
+const float KP = 0.040;
+const float KD = 0.003;
+const float KI = 0.000;
+float integral = 0;
+float ultimoErro = 0;
+float objetivoLinha = 3500; //Para o seguidor seguir centrado
+
+int tempoAntes; //Para auxiliar no calculo de intervalos de tempo
+
+int leiturasBorda = 0; //Para computar quantas vezes o sensor detectou a faixa de largada e chegada
+//Quando está antes da largada --> leiturasBorda = 0
+//Quando o leitor detecta a faixa do circuito --> leiturasBorda = 1 --> Durante todo o trajeto leiturasBorda = 1
+//Quando o sensor passar pela linha de chegada --> leiturasBorda = 2
+
+//Variável de indicação de curvas
+int curva;
+bool isSensorOnCurve = false;
+
+//Sensores de borda
+#define sensorCurva 2
+#define sensorFim 10
+//-------------------------------------//
 
 void setup() {
   Serial.begin(9600);
@@ -67,56 +70,45 @@ void setup() {
   pinMode(sensorCurva, INPUT); //Sensor indicativo de curva
   pinMode(sensorFim, INPUT);  //Sensor indicativo de início término de circuito
   tempoAntes = millis();
+
 }
 
 void loop() {
-  //Adquirindo a posição da linha sob o robô
-  unsigned int position = qtr.readLineWhite(sensorValues); // Notar que sensorValues é um array de 8 elementos indicativo de cada sensor infravermelho
-  float correcao = 0;
-  float media = 0;
-  
-  if(millis() - tempoAntes >= 1000)
+  //Recalibrando periodicamente para tentar evitar o erro dos extremos
+  if (millis() - tempoAntes >= 200)
   {
-    correcao = ajuste(soma/n);
+    qtr.calibrate();
     tempoAntes = millis();
-    
-    
-    Serial.println(soma/n);
-    soma = 0;
-    n = 0;
   }
-  else
+  int position = qtr.readLineWhite(sensorValues);
+
+  Serial.print("Posicao: ");
+  Serial.println(position);
+  for (int i = 0; i < SensorCount; i++)
   {
-    if((abs(3500 - position)) > 200){
-      soma = position;
-      //somatorio = somaAntes + soma;
-      //media = somatorio / (n + 1);
-      n = n + 1;
-      //somaAntes = somatorio;  
-    }
-    
+    Serial.print(sensorValues[i]);
+    Serial.print(" | ");
   }
+  Serial.println("");
 
-  
-  //Computando o último erro
+  float correcao = ajuste(position);
   ultimoErro = objetivoLinha - position;
-  //Serial.println("---------------");
-  //Serial.print("Erro da linha: ");
-  //Serial.println(ultimoErro);
-  //Serial.print("Posicao da linha: ");
-  //Serial.println(position);
-  //Serial.print("Valor de correcao: ");
-  //Serial.println(correcao);
 
+  //PRINT DO ERRO / POSICAO / CORRECAO
+  //  Serial.println("---------------");
+  //  Serial.print("Erro da linha: ");
+  //  Serial.println(ultimoErro);E
+  //  Serial.print("Posicao da linha: ");
+  //  Serial.println(position);
+  //  Serial.print("Valor de correcao: ");
+  //  Serial.println(correcao);
+  //  delay(1000);
+  
   //Aplicando o ajuste de velocidade aos motores
-  motor1.drive(constrain(45 + correcao, -0.25*VelocidadeMaxima, VelocidadeMaxima));
-  motor2.drive(constrain(45 - correcao, -0.25*VelocidadeMaxima, VelocidadeMaxima));
-  //Serial.print("Velocidade1 = ");
-  //Serial.println(constrain(VelocidadeMaxima - correcao,-0.25*VelocidadeMaxima, VelocidadeMaxima));
-  //Serial.print("Velocidade2 = ");
-  //Serial.println(constrain(VelocidadeMaxima + correcao, -0.25*VelocidadeMaxima, VelocidadeMaxima));
-  //Serial.println("---------------");
+//  motor1.drive(constrain(velocidadeMaxima - correcao, 0, velocidadeMaxima));
+//  motor2.drive(constrain(velocidadeMaxima + correcao, 0, velocidadeMaxima));
 
-  verifica_chegada();
+
+  //verifica_chegada();
 
 }
